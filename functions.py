@@ -1,6 +1,5 @@
 import yaml
 import os
-import fileinput
 
 #yaml parse function
 
