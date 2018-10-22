@@ -1,0 +1,9 @@
+dashboard:
+  adminEmail: mradmin@adminsitration.com
+  adminFullName: mister administrator
+  companyName: adminCo
+  data: data/goes/here/plz:/data
+  license: pawifjaweiopfjaojepfaiefjafpjapjewfiawiefaiwefiaipwefiawfapjioefjawieofaiowefpojawpefioapwefopiaoiefiajwpeijfapoijwefiopapifeajioefjia
+  port: 24601
+  serverURL: http://apif.spotify.com/app
+  ssl: true

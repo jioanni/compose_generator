@@ -1,0 +1,10 @@
+__pycache__
+.pytest_cache
+.vscode
+docker-compose.yml
+venv3
+pip-selfcheck.json
+pyvenv.cfg
+function_test.py
+*.pyc
+config_files/test.yml

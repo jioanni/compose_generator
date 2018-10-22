@@ -1,0 +1,4 @@
+main: 
+    volumes: ./volumes
+    email: ./email
+    dashboard: ./dashboard

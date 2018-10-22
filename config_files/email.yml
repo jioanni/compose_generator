@@ -1,0 +1,7 @@
+email:
+  MailFrom: mrman@manstuff.com
+  MailSmtpHost: host.mail.hostman.com
+  MailSmtpPassword: snootleboops
+  MailSmtpPort: 24601
+  MailSmtpUsername: gooberman@goober.man
+  MailStartTLS: true
