@@ -13,10 +13,14 @@ def yaml_parser(yaml_path):
                 print(exc)
     return config_yaml
 
+#file writing function
+
 def file_writer(yaml_path, data):
     fullPath = os.path.join(os.path.dirname(os.path.abspath(__file__)) + yaml_path)
     file = open(fullPath, 'w')
     yaml.dump(data, file, default_flow_style=False)
+
+#yaml generation happens below
 
 def yaml_generator(section, path):
     new_yaml = yaml_parser(path)
