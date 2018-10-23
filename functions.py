@@ -1,5 +1,6 @@
 import yaml
 import os
+import sys
 
 #yaml parse function
 
@@ -25,7 +26,10 @@ def yaml_generator(section, path):
     new_yaml = yaml_parser(path)
     obj = {section : {}}
     for key in new_yaml[section]:
-        value = input(("Enter the {} (Default: " + str(new_yaml[section][key]) + ")\n").format(key))
+        if sys.version_info[0] < 3:
+            value = raw_input(("Enter the {} (Default: " + str(new_yaml[section][key]) + ")\n").format(key))
+        else:
+            value = input(("Enter the {} (Default: " + str(new_yaml[section][key]) + ")\n").format(key))
         if key == "document_volume":
             value += ":/data/db"
         if key == "relational_volume":
@@ -43,3 +47,6 @@ def yaml_generator(section, path):
         obj[section][key] = value
     new_yaml = obj
     file_writer(path, new_yaml)
+
+
+print(yaml_generator('apifortress', '/config_files/dashboard.yml'))

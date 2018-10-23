@@ -1,9 +1,26 @@
-dashboard:
-  adminEmail: mradmin@adminsitration.com
-  adminFullName: mister administrator
-  companyName: adminCo
-  data: data/goes/here/plz:/data
-  license: pawifjaweiopfjaojepfaiefjafpjapjewfiawiefaiwefiaipwefiawfapjioefjawieofaiowefpojawpefioapwefopiaoiefiajwpeijfapoijwefiopapifeajioefjia
-  port: 24601
-  serverURL: http://apif.spotify.com/app
-  ssl: true
+apifortress:
+    environments:
+        adminEmail: 
+          description: Adminstrators email address
+          type: string
+        adminFullName: 
+        description: Adminstrators full name
+        type: string
+        companyName: 
+          description: The name of the company that will appear in test reports
+          type: string
+        data: 
+          description: The data mounting directory
+          type: string
+        license: 
+          descritpion: The license key. 
+          type: string
+        port: 
+          description: The port number for accessing the platform.
+          type: int
+        serverURL: 
+          description: The URL of the application.
+          type: string
+        ssl: 
+          description: Will you be accessing the platform via SSL?
+          type: boolean
