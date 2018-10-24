@@ -22,31 +22,34 @@ def file_writer(yaml_path, data):
 
 #yaml generation happens below
 
-def yaml_generator(section, path):
+def yaml_generator(path, compose):
     new_yaml = yaml_parser(path)
-    obj = {section : {}}
-    for key in new_yaml[section]:
-        if sys.version_info[0] < 3:
-            value = raw_input(("Enter the {} (Default: " + str(new_yaml[section][key]) + ")\n").format(key))
-        else:
-            value = input(("Enter the {} (Default: " + str(new_yaml[section][key]) + ")\n").format(key))
-        if key == "document_volume":
-            value += ":/data/db"
-        if key == "relational_volume":
-            value += ":/var/lib/postgresql/data"
-        if key == "data":
-            value += ":/data"
-        if key in ["port", "MailSmtpPort"]:
-            value = int(value)
-        if key in ["ssl", "MailStartTLS"]:
-            value = value.lower()
-            if value == "true":
-                value = True
-            else:
-                value = False
-        obj[section][key] = value
-    new_yaml = obj
-    file_writer(path, new_yaml)
+    compose_yaml = yaml_parser(compose)
+    compose_yaml = recursive_thing(new_yaml, compose_yaml)
+    print(compose_yaml)
 
 
-print(yaml_generator('apifortress', '/config_files/dashboard.yml'))
+def recursive_thing(obj, compose_yaml, compose_section = None, compose_subsection = None, compose_key = None):
+        for key in obj: 
+            if "apifortress" in key:
+                compose_section = key
+                compose_subsection = next(iter(obj[key]))
+            if type(obj[key]) == dict:
+                compose_key = key
+                recursive_thing(obj[key], compose_yaml, compose_section, compose_subsection, compose_key)
+            elif obj[key] == obj['description']:
+                if compose_key != compose_subsection:
+                    user_input = input(obj['description'] + " (Datatype: " + obj['type'] + ") Default value: " + str(compose_yaml['services'][compose_section][compose_subsection][compose_key]) + "\n")
+                    if user_input:
+                        compose_yaml['services'][compose_section][compose_subsection][compose_key] = user_input
+                else:
+                    user_input = input(obj['description'] + " (Datatype: " + obj['type'] + ") Default value: " + str(compose_yaml['services'][compose_section][compose_subsection]) + "\n")
+                    if user_input:
+                        compose_yaml['services'][compose_section][compose_subsection] = user_input
+        return compose_yaml
+
+
+
+yaml_generator('/config_files/email.yml', '/docker-compose.yml')
+
+

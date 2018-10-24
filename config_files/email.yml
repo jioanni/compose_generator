@@ -1,7 +1,23 @@
-email:
-  MailFrom: mrman@manstuff.com
-  MailSmtpHost: host.mail.hostman.com
-  MailSmtpPassword: snootleboops
-  MailSmtpPort: 24601
-  MailSmtpUsername: gooberman@goober.man
-  MailStartTLS: true
+apifortress-mailer:
+    environment:
+      mailFrom: 
+        description: The from email address
+        type: string
+      mailSmtpHost:
+        description: The SMTP host address
+        type: string
+      mailSmtpPassword:
+        description: the password for the smtp server
+        type: string
+      mailSmtpPort:
+        description: the smtp port
+        type: int
+      mailSmtpUsername:
+        description: the smtp username
+        type: string
+      mailSmtpStartTLS:
+        description: does this use TLS?
+        type: boolean
+      apifortressServerURL:
+        description: The URL of the API Fortress deployment.
+        type: string

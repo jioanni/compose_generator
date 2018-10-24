@@ -1,3 +1,8 @@
-volumes:
-  document_volume: asfasdf/adsfasf/asdfasdf:/data/db
-  relational_volume: asfdadsf/asdafssdf/fasdafsdf:/var/lib/postgresql/data
+apifortress-mongo:
+    volumes:
+      description: The mount for the mongo innstance
+      type: string
+apifortress-postgres:
+    volumes:
+      description: The mount for the postgres instance
+      type: string

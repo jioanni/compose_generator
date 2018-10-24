@@ -1,26 +1,19 @@
 apifortress:
-    environments:
+    environment:
         adminEmail: 
           description: Adminstrators email address
           type: string
         adminFullName: 
-        description: Adminstrators full name
-        type: string
-        companyName: 
+          description: Adminstrators full name
+          type: string
+        defaultCompanyName: 
           description: The name of the company that will appear in test reports
           type: string
-        data: 
-          description: The data mounting directory
-          type: string
         license: 
-          descritpion: The license key. 
+          description: The license key. 
           type: string
-        port: 
-          description: The port number for accessing the platform.
-          type: int
-        serverURL: 
+        grailsServerURL: 
           description: The URL of the application.
           type: string
-        ssl: 
-          description: Will you be accessing the platform via SSL?
-          type: boolean
+ 
+
