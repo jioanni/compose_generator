@@ -1,0 +1,4 @@
+apifortress-mongo:
+    volumes:
+      description: The mount for the mongo instance
+      type: string

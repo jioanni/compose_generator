@@ -1,8 +1,8 @@
 apifortress-mailer:
-    environment:
       mailFrom: 
         description: The from email address
         type: string
+        validator: 
       mailSmtpHost:
         description: The SMTP host address
         type: string

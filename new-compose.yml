@@ -1,0 +1,178 @@
+networks:
+  apifortress:
+    external: true
+services:
+  apifortress:
+    depends_on:
+    - apifortress-mongo
+    - apifortress-postgres
+    - apifortress-rabbit
+    environment:
+      adminEmail: jason@apifortress.com
+      adminFullName: Jason Jason
+      amazonkey: ''
+      amazonsecret: ''
+      amqpUseRabbit: 'true'
+      apiSpecConverterPath: changeit
+      apiaryClientId: aa
+      apiaryParserUrl: http://node.apifortress:7801/fury
+      apiaryRedirect: aa
+      apiarySecret: aa
+      apifortressMailEnabled: 'true'
+      apifortressMailFrom: info@example.com
+      apifortressMailSmtpHost: smtp.gmail.com
+      apifortressMailSmtpPassword: thisisforemergencies
+      apifortressMailSmtpPort: '587'
+      apifortressMailSmtpUsername: apifortress.ops@gmail.com
+      apifortressMailStartTLS: 'true'
+      apifortressMailUseSES: 'false'
+      apifortressSmsEnabled: 'false'
+      dbHost: mongo.apifortress
+      defaultCompanyName: JayCo
+      grailsServerURL: https://apif.jayco.com/app
+      license: Z70hYc9hm9PhOI1pQlrJL2keRpq4ghePArAKETc311oaLvPOzotM6j2v1o0u0tDAKM7ICFsXFSpmakaofoU/JTymFhdV/esPWxihPSIhJ96oc1YInz49abIebTau0Pe04JMBZ4bdbAkSqpu7egSLaBpv0SxtXZmBf5XjQNl4qA1mUsKZ9s9CMTgAwHdLM39nxTznlnACIVqcMujZcrHbbnRhfhDeU7R5wDOgaZXqUsXDfS/0BXPQbg==
+      psqlhost: postgres.apifortress
+      rabbitHost: rabbit.apifortress
+      rabbitPassword: jk5112
+      rabbitUsername: apif
+      twilioSid: changeit
+      twilioToken: changeit
+    hostname: dashboard.apifortress
+    image: apifortress/apifortress:latest
+    networks:
+      apifortress:
+        aliases:
+        - dashboard.apifortress
+    ports: 80:8080
+    volumes:
+    - ./data:/data
+  apifortress-connector:
+    depends_on:
+    - apifortress-rabbit
+    - apifortress-mongo
+    - apifortress
+    environment:
+      authKey: apif
+      authSecret: 2abb1t
+      mode: docker
+      mongoHost: mongo.apifortress
+      mongoPort: '27017'
+      rabbitHost: rabbit.apifortress
+      rabbitPassword: jk5112
+      rabbitPort: '5672'
+      rabbitUsername: apif
+      serviceName: connector
+    hostname: afconnector.apifortress
+    image: apifortress/afconnector:latest
+    networks:
+    - apifortress
+  apifortress-kong:
+    environment:
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres.apifortress
+      KONG_PG_PASSWORD: jk5112
+      KONG_PG_USER: apipulse
+      KONG_PLUGINS: fortress-http-log,file-log-extended,request-transformer,upstream-replace
+      KONG_PROXY_ERROR_LOG: /dev/stdout
+    hostname: kong.apifortress
+    image: apifortress/kong
+    networks:
+      apifortress:
+        aliases:
+        - kong.apifortress
+    ports: 80:8080
+  apifortress-mailer:
+    depends_on:
+    - apifortress-rabbit
+    - apifortress
+    environment:
+      amazonKey: ''
+      amazonSecret: ''
+      apifortressServerURL: https://apif.jayco.com/app
+      authKey: apif
+      authSecret: 2abb1t
+      mailFrom: jason@apifortress.com
+      mailSmtpHost: smtp.jayco.com
+      mailSmtpPassword: booplesnoot
+      mailSmtpPort: '588'
+      mailSmtpStartTLS: 'true'
+      mailSmtpUsername: jason@apifortress.com
+      mailUseSES: 'false'
+      mode: docker
+      rabbitHost: rabbit.apifortress
+      rabbitPassword: jk5112
+      rabbitPort: '5672'
+      rabbitUsername: apif
+      serviceName: mailer
+      smsFrom: changeit
+      twilioSid: changeit
+      twilioToken: changeit
+    hostname: afmailer.apifortress
+    image: apifortress/afmailer:latest
+    networks:
+    - apifortress
+  apifortress-mongo:
+    command:
+    - --storageEngine
+    - wiredTiger
+    hostname: mongo.apifortress
+    image: mongo:3.0.14
+    networks:
+      apifortress:
+        aliases:
+        - mongo.apifortress
+    volumes:
+    - /private/var/local/apifortress/document:/data/db
+  apifortress-node:
+    hostname: node.apifortress
+    image: apifortress/tools
+    networks:
+      apifortress:
+        aliases:
+        - node.apifortress
+  apifortress-postgres:
+    environment:
+      POSTGRES_PASSSWORD: jk5112
+      POSTGRES_USER: apipulse
+    hostname: postgres.apifortress
+    image: postgres:9.5.5
+    networks:
+      apifortress:
+        aliases:
+        - postgres.apifortress
+    volumes:
+    - /private/var/local/apifortress/relational:/var/lib/postgresql/data
+  apifortress-rabbit:
+    environment:
+      RABBITMQ_DEFAULT_PASS: jk5112
+      RABBITMQ_DEFAULT_USER: apif
+    hostname: rabbit.apifortress
+    image: rabbitmq:3.6.6-management
+    networks:
+      apifortress:
+        aliases:
+        - rabbit.apifortress
+  apifortress-scheduler:
+    depends_on:
+    - apifortress-rabbit
+    - apifortress-mongo
+    - apifortress
+    environment:
+      authKey: apif
+      authSecret: 2abb1t
+      checkerInterval: '2'
+      mode: docker
+      mongoHost: mongo.apifortress
+      mongoPort: '27017'
+      prefetch: '2'
+      rabbitHost: rabbit.apifortress
+      rabbitPassword: jk5112
+      rabbitPort: '5672'
+      rabbitUsername: apif
+      serviceName: scheduler
+    hostname: afscheduler.apifortress
+    image: apifortress/afscheduler:latest
+    networks:
+    - apifortress
+version: '2'

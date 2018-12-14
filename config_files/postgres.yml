@@ -2,7 +2,3 @@ apifortress-postgres:
     volumes:
         description: The mount for the postgres instance
         type: string
-apifortress-mongo:
-    volumes:
-        description: The mount for the mongo instance
-        type: string

@@ -1,6 +1,26 @@
 import yaml
 import os
 import sys
+import six
+
+class Compose_File: 
+    def __init__(self):
+        self.content = {}
+        self.output = '/docker-compose.yml'
+
+    def get_content(self):
+        return self.content
+
+    def set_content(self, content):
+        self.content = content
+        return self.content
+
+    def get_output(self):
+        return self.output
+
+    def set_output(self, path):
+        self.output = path
+        return self.output
 
 #yaml parse function
 
@@ -23,33 +43,68 @@ def file_writer(yaml_path, data):
 #yaml generation happens below
 
 def yaml_generator(path, compose):
-    new_yaml = yaml_parser(path)
+    config_yaml = yaml_parser(path)
     compose_yaml = yaml_parser(compose)
-    compose_yaml = recursive_thing(new_yaml, compose_yaml)
-    print(compose_yaml)
+    compose_yaml = modify_yaml(config_yaml, compose_yaml)
+    return compose_yaml
+
+# The function that manages organized editing of the compose yaml
+
+def modify_yaml(config_dict, compose_dict):
+    config_title = next(iter(config_dict))
+    for key in config_dict[config_title]:
+        example = recursive_printer(compose_dict, key)
+        new_value = six.moves.input(config_dict[config_title][key]['description'] + "\n" + "Example: " + example + '\n')
+        recursive_replacer(compose_dict, key, new_value)
+    return compose_dict
+
+# A function that will recursively seek out and replace a value in a deeply nested dict
+
+# def recursive_replacer(obj, search_key, value):
+#     for key in obj:
+#         if key == search_key:
+#             obj[key] = value
+#             print(obj)
+#             return obj
+#         elif type(obj[key]) == dict:
+#            recursive_replacer(obj[key], search_key, value)
+
+def recursive_replacer(obj, search_key, value):
+    for key, val in obj.items():
+        if isinstance(val, dict):
+            obj[key] = recursive_replacer(val, search_key, value)
+        if key == search_key:
+            obj[key] = value
+            return obj
+    return obj
 
 
-def recursive_thing(obj, compose_yaml, compose_section = None, compose_subsection = None, compose_key = None):
-        for key in obj: 
-            if "apifortress" in key:
-                compose_section = key
-                compose_subsection = next(iter(obj[key]))
-            if type(obj[key]) == dict:
-                compose_key = key
-                recursive_thing(obj[key], compose_yaml, compose_section, compose_subsection, compose_key)
-            elif obj[key] == obj['description']:
-                if compose_key != compose_subsection:
-                    user_input = input(obj['description'] + " (Datatype: " + obj['type'] + ") Default value: " + str(compose_yaml['services'][compose_section][compose_subsection][compose_key]) + "\n")
-                    if user_input:
-                        compose_yaml['services'][compose_section][compose_subsection][compose_key] = user_input
-                else:
-                    user_input = input(obj['description'] + " (Datatype: " + obj['type'] + ") Default value: " + str(compose_yaml['services'][compose_section][compose_subsection]) + "\n")
-                    if user_input:
-                        compose_yaml['services'][compose_section][compose_subsection] = user_input
-        return compose_yaml
+# A function that will retrieve a value in a deeply nested dict and return it.
+
+def recursive_printer(obj, search_key):
+    found_value = None
+    for key, val in obj.items():
+        if key == search_key:
+            found_value = val
+            if isinstance(found_value, list):
+                found_value = found_value[0]
+            break
+        elif isinstance(val, dict):
+            found_value = recursive_printer(obj[key], search_key)
+            if found_value != None:
+                break
+    return found_value
 
 
 
-yaml_generator('/config_files/email.yml', '/docker-compose.yml')
+
+
+# new_compose = yaml_generator('/config_files/dashboard.yml', '/docker-compose.yml')
+
+# file_writer("/new-compose.yml", new_compose)
+
+# new_compose = yaml_generator('/config_files/email.yml', '/new-compose.yml')
+
+# file_writer("/new-compose.yml", new_compose)
 
 

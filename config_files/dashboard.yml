@@ -1,5 +1,4 @@
 apifortress:
-    environment:
         adminEmail: 
           description: Adminstrators email address
           type: string
@@ -14,6 +13,9 @@ apifortress:
           type: string
         grailsServerURL: 
           description: The URL of the application.
+          type: string
+        ports:
+          description: The port that you will be exposing APIF through
           type: string
  
 
